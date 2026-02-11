@@ -2,231 +2,343 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>For My Forever Pratyusha 💓</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>For My Pratyusha ❤️</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Playfair+Display:italic,700&family=Poppins:wght@300;500&family=Hind+Siliguri:wght@400;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --pink: #ff4d6d;
-            --soft-pink: #fff0f3;
-            --deep-red: #c9184a;
-            --gold: #ffb703;
+            --primary: #8e2137;
+            --secondary: #e5989b;
+            --bg: #1a0a0c;
+            --paper: #fff9f2;
         }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #fff0f3 0%, #ffdde1 100%);
-            color: #333;
-            text-align: center;
             margin: 0;
-            padding-bottom: 50px;
+            background-color: var(--bg);
+            font-family: 'Poppins', sans-serif;
+            color: #fff;
             overflow-x: hidden;
-            min-height: 100vh;
+            text-align: center;
+            width: 100%;
         }
 
-        /* Floating Hearts Background Animation */
-        .bg-heart {
+        /* --- STAGE 0: PASSWORD --- */
+        #pass-screen {
             position: fixed;
-            color: rgba(255, 77, 109, 0.2);
-            font-size: 20px;
-            z-index: -1;
-            animation: float 10s infinite linear;
+            inset: 0;
+            background: var(--bg);
+            z-index: 3000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
         }
-        @keyframes float {
-            0% { transform: translateY(100vh) rotate(0deg); opacity: 1; }
-            100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+
+        input {
+            padding: 15px;
+            border-radius: 12px;
+            border: 2px solid var(--secondary);
+            background: rgba(255,255,255,0.05);
+            color: white;
+            font-size: 1.1rem;
+            width: 80%;
+            max-width: 300px;
+            margin: 20px 0;
+            outline: none;
+            text-align: center;
         }
 
-        .section { display: none; padding: 40px 20px; animation: fadeIn 0.8s ease-in-out; }
-        .active { display: block; }
+        /* --- STAGE 1: HUG GAME --- */
+        #game-screen {
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(circle, #2d0b11 0%, #1a0a0c 100%);
+            z-index: 2000;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
 
-        /* Buttons & Inputs */
-        input { padding: 15px; border-radius: 30px; border: 2px solid var(--pink); outline: none; width: 220px; text-align: center; font-size: 1rem; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
-        button { padding: 15px 30px; border-radius: 30px; background: var(--pink); color: white; border: none; cursor: pointer; font-weight: bold; margin-top: 15px; transition: 0.3s; box-shadow: 0 4px 15px rgba(255, 77, 109, 0.3); font-size: 1rem; }
-        button:hover { background: var(--deep-red); transform: scale(1.05); box-shadow: 0 6px 20px rgba(255, 77, 109, 0.4); }
+        .meter-box {
+            width: 90%;
+            max-width: 300px;
+            height: 20px;
+            background: rgba(255,255,255,0.1);
+            border: 1.5px solid var(--secondary);
+            border-radius: 20px;
+            margin: 25px 0;
+            overflow: hidden;
+        }
 
-        /* Letter Box */
-        .letter-box { background: rgba(255, 255, 255, 0.9); padding: 30px; border-radius: 30px; box-shadow: 0 10px 30px rgba(255, 77, 109, 0.15); max-width: 550px; margin: 20px auto; text-align: left; line-height: 1.8; border: 2px solid white; position: relative; }
-        .letter-box::before { content: '💌'; position: absolute; top: -20px; right: 20px; font-size: 2rem; }
+        #bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            transition: width 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
 
-        /* Game Section */
-        .grid { display: grid; grid-template-columns: repeat(3, 90px); gap: 15px; justify-content: center; margin: 30px auto; }
-        .box { width: 90px; height: 90px; background: white; border-radius: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 2rem; transition: 0.3s; border: 2px solid #ffccd5; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
-        .box:hover { transform: scale(1.1); border-color: var(--pink); }
+        /* --- PAGES --- */
+        .page {
+            display: none;
+            padding: 30px 15px;
+            min-height: 100vh;
+            opacity: 0;
+            transition: 1s ease;
+        }
 
-        /* Photos Section */
-        .photo-frame { width: 85%; max-width: 300px; background: white; padding: 15px; border-radius: 15px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); margin: 40px auto; transform: rotate(-2deg); }
-        .photo-frame:nth-child(even) { transform: rotate(2deg); }
-        .photo-frame img { width: 100%; border-radius: 10px; }
-        .caption { font-family: 'Brush Script MT', cursive; font-size: 1.6rem; color: var(--deep-red); margin-top: 10px; }
+        #surprise-page {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+            inset: 0;
+            background: var(--bg);
+            z-index: 1000;
+        }
 
-        /* Hidden Message */
-        #hiddenMsg { display: none; background: #fff; padding: 30px; border-radius: 30px; border: 4px double var(--pink); margin: 30px auto; max-width: 500px; color: var(--deep-red); font-weight: bold; line-height: 1.8; box-shadow: 0 20px 40px rgba(255, 77, 109, 0.2); animation: pop 0.5s ease; }
+        .letter-box {
+            background: var(--paper);
+            color: #333;
+            width: 100%;
+            max-width: 350px;
+            margin: 0 auto;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.2rem;
+            line-height: 1.5;
+            text-align: left;
+        }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes pop { 0% { transform: scale(0.8); } 100% { transform: scale(1); } }
-        .confetti { position: fixed; top: -50px; z-index: 999; animation: fall 3s linear forwards; pointer-events: none; }
-        @keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
+        .bengali { display: none; font-family: 'Hind Siliguri', sans-serif; font-size: 1.1rem; }
+
+        /* --- MOBILE GALLERY --- */
+        .polaroid-stack {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+            margin: 30px 0;
+        }
+
+        .polaroid {
+            background: white;
+            padding: 8px 8px 25px 8px;
+            width: 85%;
+            max-width: 280px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+            transform: rotate(var(--r));
+        }
+
+        .polaroid img { width: 100%; height: auto; aspect-ratio: 1/1; object-fit: cover; border: 1px solid #eee; }
+        .polaroid p { color: #333; font-family: 'Dancing Script', cursive; margin: 10px 0 0 0; font-size: 1.1rem; font-weight: bold;}
+
+        /* --- BUTTONS --- */
+        .btn {
+            padding: 16px 32px;
+            background: var(--primary);
+            color: white;
+            border: 1px solid var(--secondary);
+            border-radius: 50px;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 500;
+            font-size: 1rem;
+            margin-top: 20px;
+            width: 80%;
+            max-width: 280px;
+            box-shadow: 0 4px 15px rgba(142, 33, 55, 0.4);
+            position: relative;
+        }
+
+        .btn:active { transform: scale(0.95); }
+
+        .trans-btn {
+            background: transparent;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+            padding: 8px 15px;
+            font-size: 0.8rem;
+            margin-top: 15px;
+            width: auto;
+        }
+
+        /* --- ANIMATIONS --- */
+        .petal { position: fixed; background: #ffb7c5; border-radius: 150% 0 150% 0; pointer-events: none; z-index: 1500; animation: fall linear forwards; }
+        @keyframes fall { to { transform: translateY(100vh) rotate(540deg); opacity: 0; } }
+        
+        .floating-heart {
+            position: absolute;
+            color: var(--secondary);
+            pointer-events: none;
+            animation: floatUp 1s ease-out forwards;
+            font-size: 24px;
+        }
+        @keyframes floatUp {
+            0% { transform: translateY(0) scale(1); opacity: 1; }
+            100% { transform: translateY(-120px) scale(2); opacity: 0; }
+        }
+
+        .shake { animation: shake 0.2s ease-in-out; }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
     </style>
 </head>
 <body>
 
-    <script>
-        for (let i = 0; i < 20; i++) {
-            let heart = document.createElement('div');
-            heart.className = 'bg-heart';
-            heart.innerHTML = '❤️';
-            heart.style.left = Math.random() * 100 + 'vw';
-            heart.style.animationDelay = Math.random() * 10 + 's';
-            document.body.appendChild(heart);
-        }
-    </script>
-
-    <div id="loginSection" class="section active">
-        <h1 style="color: var(--pink); margin-top: 100px; font-size: 2.5rem;">Hello My Love ❤️</h1>
-        <p>Enter our secret code to continue...</p>
-        <input type="password" id="passInput" placeholder="Enter Code Here...">
-        <br>
-        <button onclick="checkPass()">Unlock Our World 💖</button>
+    <div id="pass-screen">
+        <h2 style="font-family: 'Playfair Display', serif; font-size: 1.5rem;">A Secret for Pratyusha</h2>
+        <p style="font-size: 0.8rem; opacity: 0.6;">Enter our special date</p>
+        <input type="tel" id="passInput" placeholder="******" pattern="[0-9]*" inputmode="numeric">
+        <button class="btn" onclick="checkPass()">Unlock My Heart ❤️</button>
     </div>
 
-    <div id="introSection" class="section">
-        <h1 style="color: var(--deep-red); font-size: 2.2rem; margin-top: 50px;">Pratyusha... 💓</h1>
-        <div class="letter-box" style="text-align: center;">
-            <p style="font-size: 1.3rem; font-weight: bold;">I Have Made Something Special For U MY Love 💓</p>
-            <p>I wanted to celebrate "Us" in a way that is as sweet and unique as you are. Let's start with a little surprise...</p>
-        </div>
-        <button onclick="nextSection('gameSection')">Let's Play! ✨</button>
+    <div id="game-screen">
+        <h2 style="font-family: 'Playfair Display', serif;">Hug Storage: <span id="percent">0%</span></h2>
+        <p style="font-size: 0.9rem; opacity: 0.8;">Tap to send me hugs!</p>
+        <div class="meter-box"><div id="bar"></div></div>
+        <button class="btn" id="hugBtn" onclick="chargeHug(event)">Give a Hug 🫂</button>
     </div>
 
-    <div id="gameSection" class="section">
-        <h2 style="color: var(--pink);">Find the 3 Secret Rings 💍</h2>
-        <p>Out of 9 boxes, only 3 hold a ring. Can you find them?</p>
-        <p style="font-size: 1.2rem; font-weight: bold;">Rings Found: <span id="count" style="color: var(--pink);">0</span>/3</p>
-        <div class="grid" id="grid"></div>
-        <button id="nextBtn" style="display:none;" onclick="nextSection('promiseSection')">You Found Them! Continue ❤️</button>
+    <div id="surprise-page">
+        <h1 style="font-family: 'Playfair Display', serif; font-size: 1.8rem; padding: 20px;">I have made something little for u love ❤️</h1>
+        <button class="btn" onclick="showLetter()">Open it 🫂</button>
     </div>
 
-    <div id="promiseSection" class="section">
-        <h2 style="color: var(--pink);">A Promise From My Heart 💌</h2>
+    <div id="letter-page" class="page">
         <div class="letter-box">
-            <p><strong>My love Pratyusha❤️,</strong></p>
-            <p>On this Promise Day, I want to make simple and true promises to you.</p>
-            <p>I promise to always care for you and respect you. I promise to stand with you in happy times and also when things are hard. I may not be perfect, but I promise to try my best for you every single day.</p>
-            <p>I promise to listen to you, understand your feelings, and support your dreams. When you are tired, I will be there to comfort you. When you smile, I will smile with you.</p>
-            <p>I promise to be honest with you and love you with my whole heart. No matter what happens, my love for you will always stay the same....</p>
-            <p>I love u in every second , every minute, every hour , every day , every year and forever ....</p>
-            <p>You are very special to me, and I am thankful to have you in my life.</p>
-            <p><strong>Happy Promise Day, my love 💓<br>Always yours, Prayash ❤️</strong></p>
+            <div id="eng">
+                <h3 style="color: var(--primary); margin-top: 0;">My love Pratyusha,</h3>
+                <p>Happy Hug Day ❤️<br><br>I don’t know why, but whenever I think about you, I just feel like hugging you tight. Not saying anything. Just holding you close and staying there for a long time.<br><br>Your hug is my favorite place. It makes me feel calm, safe, and happy at the same time.<br><br>I wish I could hug you right now. The kind of hug where you don’t want to let go. I would pull you close, keep my chin on your head, and just smile because you are mine.</p>
+                <p style="text-align: right; margin-bottom: 0;">Yours, Prayash</p>
+            </div>
+            <div id="bng" class="bengali">
+                <h3 style="color: var(--primary); margin-top: 0;">আমার প্রিয় প্রত্যুষা,</h3>
+                <p>শুভ আলিঙ্গন দিবস ❤️<br><br>যখনই তোমার কথা ভাবি, তোমাকে শক্ত করে জড়িয়ে ধরতে ইচ্ছে করে। কিছু না বলে, শুধু তোমাকে কাছে টেনে নিয়ে অনেকক্ষণ থাকতে চাই।<br><br>তোমার আলিঙ্গন আমার সবচেয়ে প্রিয় জায়গা। এটি আমাকে শান্ত এবং নিরাপদ বোধ করায়। তুমিই আমার আরাম। আমার শান্তি। আমার আপন মানুষ।</p>
+                <p style="text-align: right; margin-bottom: 0;">তোমার, প্রয়াশ</p>
+            </div>
+            <button class="btn trans-btn" onclick="toggleLang()" id="lBtn">Translate to Bengali</button>
         </div>
-        <button onclick="nextSection('photoSection')">See Our Memories 📸</button>
+        <button class="btn" onclick="showGallery()">See Our Memories ✨</button>
     </div>
 
-    <div id="photoSection" class="section">
-        <h2 style="color: var(--pink);">Our Beautiful Moments 📸</h2>
-        <div class="photo-frame">
-            <img src="https://i.ibb.co/5hCKkJDv/IMG-20260123-WA0032.jpg" alt="Moment 1">
-            <div class="caption">My Favorite Person ❤️</div>
+    <div id="gallery-page" class="page">
+        <h2 style="font-family: 'Playfair Display', serif; color: var(--secondary);">Our Beautiful Journey</h2>
+        <div class="polaroid-stack">
+            <div class="polaroid" style="--r:-2deg;">
+                <img src="https://i.ibb.co/8LMDFQ9B/Screenshot-20251229-204904.png" alt="Memory 1">
+                <p>Our beautiful chats 💬</p>
+            </div>
+            <div class="polaroid" style="--r:3deg;">
+                <img src="https://i.ibb.co/7xrfkzzc/IMG-20251120-WA0038.jpg" alt="Memory 2">
+                <p>Forever vibes ✨</p>
+            </div>
+            <div class="polaroid" style="--r:-1deg;">
+                <img src="https://i.ibb.co/Mx8pcv1M/IMG-20260201-WA0044.jpg" alt="Memory 3">
+                <p>Thinking of you... 💭</p>
+            </div>
+            <div class="polaroid" style="--r:2deg;">
+                <img src="https://i.ibb.co/vCBQd416/Screenshot-20260206-233117.png" alt="Memory 4">
+                <p>The best moments ❤️</p>
+            </div>
         </div>
-        <div class="photo-frame">
-            <img src="https://i.ibb.co/zH7NjTRj/IMG-20260130-162324.jpg" alt="Moment 2">
-            <div class="caption">The Cutest Smile ✨</div>
-        </div>
-        <div class="photo-frame">
-            <img src="https://i.ibb.co/WTydgJK/IMG-20260203-WA0003.jpg" alt="Moment 3">
-            <div class="caption">Forever to Go ♾️</div>
-        </div>
-        <br>
-        <button onclick="nextSection('finalSection')">One Last Question... 💍</button>
+        <button class="btn" onclick="showFinale()">One Last Thing...</button>
     </div>
 
-    <div id="finalSection" class="section">
-        <h1 style="color: var(--pink); padding: 0 10px;">Will You be My Forever And Ever and Ever And Ever?</h1>
-        <div style="margin-top: 40px;">
-            <button onclick="sayYes()" style="font-size: 1.8rem; padding: 20px 60px;">A) Yes... ❤️</button>
-            <br><br>
-            <button onclick="alert('Wrong choice! Try again, beautiful 😉')" style="background: #ccc; font-size: 0.8rem; padding: 10px 30px;">B) No ..</button>
-        </div>
-
-        <div id="hiddenMsg">
-            I LOVE YOU PRATYUSHA 💓 FOREVER ... ♾️💓🧿 ... <br><br>
-            TILL THE END OF THIS WORLD AND MY LIFE , U WILL BE MY WIFE , MY 1st BABY , MY LOVE AND MOTHER OF OUR KIDS.. 💓♾️🧿
-        </div>
+    <div id="finale-page" class="page" style="display:none; flex-direction: column; justify-content: center; background: radial-gradient(circle, #4e0d1a 0%, #1a0a0c 100%);">
+        <h1 style="font-size: 1.8rem; padding: 0 20px;">I lovee u a lottttttttttttttt .....</h1>
+        <h2 style="font-family: 'Dancing Script', cursive; font-size: 1.8rem; color: var(--secondary);">I love u foreverrrrrrrr ❤️❤️❤️</h2>
+        <div style="font-size: 2.5rem; margin-top: 20px;">🧿🧿🧿🧿</div>
     </div>
 
     <script>
+        let hugLevel = 0;
+
         function checkPass() {
-            const pass = document.getElementById('passInput').value;
-            // Updated Password Requirement
-            if(pass === "120805") { 
-                nextSection('introSection'); 
-            } else { 
-                alert("Only for Pratyusha's eyes! ❤️"); 
+            if(document.getElementById('passInput').value === "120805") {
+                document.getElementById('pass-screen').style.display = 'none';
+                document.getElementById('game-screen').style.display = 'flex';
+            } else { alert("Wrong code, Love!"); }
+        }
+
+        function chargeHug(e) {
+            if (navigator.vibrate) { navigator.vibrate(60); }
+            const btn = document.getElementById('hugBtn');
+            btn.classList.add('shake');
+            setTimeout(() => btn.classList.remove('shake'), 200);
+
+            const touch = e.type === 'touchstart' ? e.touches[0] : e;
+            const heart = document.createElement('div');
+            heart.innerHTML = '❤️';
+            heart.className = 'floating-heart';
+            heart.style.left = (touch.clientX - 10) + 'px';
+            heart.style.top = (touch.clientY - 10) + 'px';
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), 1000);
+
+            if(hugLevel < 100) {
+                hugLevel += 20;
+                document.getElementById('bar').style.width = hugLevel + '%';
+                document.getElementById('percent').innerText = hugLevel + '%';
+                if(hugLevel >= 100) {
+                    setTimeout(() => {
+                        document.getElementById('game-screen').style.display = 'none';
+                        document.getElementById('surprise-page').style.display = 'flex';
+                        document.getElementById('surprise-page').style.opacity = '1';
+                    }, 600);
+                }
             }
         }
 
-        function nextSection(id) {
-            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-            window.scrollTo({top: 0, behavior: 'smooth'});
-            if(id === 'gameSection') setupGame();
+        function showLetter() {
+            document.getElementById('surprise-page').style.display = 'none';
+            document.getElementById('letter-page').style.display = 'block';
+            setTimeout(() => { document.getElementById('letter-page').style.opacity = '1'; }, 100);
+            spawnPetals();
         }
 
-        let ringsFound = 0;
-        function setupGame() {
-            const grid = document.getElementById('grid');
-            grid.innerHTML = '';
-            ringsFound = 0;
-            document.getElementById('count').innerText = "0";
-            let ringPositions = [];
-            while(ringPositions.length < 3){
-                let r = Math.floor(Math.random() * 9);
-                if(ringPositions.indexOf(r) === -1) ringPositions.push(r);
-            }
-            
-            for(let i=0; i<9; i++) {
-                const box = document.createElement('div');
-                box.className = 'box';
-                box.innerHTML = '🎁'; 
-                box.onclick = function() {
-                    if(ringPositions.includes(i)) {
-                        if(this.innerHTML !== '💍') {
-                            this.innerHTML = '💍';
-                            this.style.background = '#ffccd5';
-                            ringsFound++;
-                            document.getElementById('count').innerText = ringsFound;
-                            kissConfetti();
-                            if(ringsFound === 3) {
-                                document.getElementById('nextBtn').style.display = 'inline-block';
-                            }
-                        }
-                    } else {
-                        this.innerHTML = '🌸';
-                        this.style.background = '#f9f9f9';
-                        this.style.pointerEvents = 'none';
-                    }
-                };
-                grid.appendChild(box);
-            }
+        function showGallery() {
+            window.scrollTo(0,0);
+            document.getElementById('letter-page').style.display = 'none';
+            document.getElementById('gallery-page').style.display = 'block';
+            setTimeout(() => { document.getElementById('gallery-page').style.opacity = '1'; }, 100);
         }
 
-        function kissConfetti() {
-            for(let i=0; i<30; i++) {
-                const kiss = document.createElement('div');
-                kiss.className = 'confetti';
-                kiss.innerHTML = (Math.random() > 0.5) ? '💋' : '💖';
-                kiss.style.left = Math.random() * 100 + 'vw';
-                kiss.style.fontSize = (Math.random() * 20 + 20) + 'px';
-                kiss.style.animationDuration = (Math.random() * 2 + 1) + 's';
-                document.body.appendChild(kiss);
-                setTimeout(() => kiss.remove(), 3000);
-            }
+        function showFinale() {
+            window.scrollTo(0,0);
+            document.getElementById('gallery-page').style.display = 'none';
+            document.getElementById('finale-page').style.display = 'flex';
+            setTimeout(() => { document.getElementById('finale-page').style.opacity = '1'; }, 100);
         }
 
-        function sayYes() {
-            document.getElementById('hiddenMsg').style.display = 'block';
-            kissConfetti();
-            setTimeout(() => {
-                document.getElementById('hiddenMsg').scrollIntoView({ behavior: 'smooth' });
-            }, 200);
+        function toggleLang() {
+            const e = document.getElementById('eng'), b = document.getElementById('bng'), t = document.getElementById('lBtn');
+            if(e.style.display !== 'none') { e.style.display='none'; b.style.display='block'; t.innerText='Show English'; }
+            else { e.style.display='block'; b.style.display='none'; t.innerText='Translate to Bengali'; }
+        }
+
+        function spawnPetals() {
+            setInterval(() => {
+                const p = document.createElement('div');
+                p.className = 'petal';
+                p.style.left = Math.random() * 100 + 'vw';
+                p.style.width = (Math.random() * 8 + 8) + 'px';
+                p.style.height = p.style.width;
+                p.style.animationDuration = (Math.random() * 2 + 3) + 's';
+                document.body.appendChild(p);
+                setTimeout(() => p.remove(), 5000);
+            }, 500);
         }
     </script>
 </body>
